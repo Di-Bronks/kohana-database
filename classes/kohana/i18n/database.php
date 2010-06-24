@@ -75,26 +75,24 @@ class Kohana_I18n_Database extends Kohana_I18n_Reader {
 	}
 
 	/**
-	 * Overload setting offsets to insert or update the database values as 
-	 * changes occur.
+	 * Insert a missing key to the i18n table
 	 *
 	 * @param   string   array key
-	 * @param   mixed    new value
-	 * @return  mixed
+	 * @return  boolean
 	 */
-	public function offsetGet($key)
+	public function offsetExists($key)
 	{
-		/*if ( ! $this->offsetExists($key))
+		if ( ! parent::offsetExists($key))
 		{
 			// Insert a new value
 			DB::insert($this->_database_table, array('locale', 'key', 'value'))
 				->values(array($this->_lang, $key, $key))
 				->execute($this->_database_instance);
 
-			return $key;
-		}*/
+			return FALSE;
+		}
 
-		return parent::offsetGet($key);
+		return TRUE;
 	}
 
 } // End Kohana_I18n_Database
