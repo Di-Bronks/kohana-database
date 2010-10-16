@@ -48,11 +48,22 @@ class Kohana_Config_Database extends Kohana_Config_Reader {
 	{
 		if ($config === NULL AND $group !== 'database')
 		{
-			// Load all of the configuration values for this group
-			$query = DB::select('config_key', 'config_value')
-				->from($this->_database_table)
-				->where('group_name', '=', $group)
-				->execute($this->_database_instance);
+			try
+			{
+				// Load all of the configuration values for this group
+				$query = DB::select('config_key', 'config_value')
+					->from($this->_database_table)
+					->where('group_name', '=', $group)
+					->execute($this->_database_instance);
+			}
+			catch (Exception $e)
+			{
+				Kohana::$log->add('error', "Database table ':table' does not exist.", array(
+					':table'    => $this->_database_table,
+				));
+
+				return FALSE;
+			}
 
 			if (count($query) > 0)
 			{
